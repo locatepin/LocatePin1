@@ -22,6 +22,7 @@ import {
 import { OFFICIAL_BANK_DETAILS } from "../data/bankAndSubscriptionData";
 import { WelcomeEmailModal } from "./WelcomeEmailModal";
 import { Logo } from "./Logo";
+import { LiveAccessLocationPill } from "./LiveAccessLocationPill";
 
 export const SubscriptionModelPage: React.FC = () => {
   const { user, activateSubscription, startFreeTrial, logout } = useAuth();
@@ -194,6 +195,10 @@ export const SubscriptionModelPage: React.FC = () => {
 
         {/* User Authenticated Badge & Logout */}
         <div className="flex items-center gap-2 sm:gap-3">
+          <div className="hidden sm:block">
+            <LiveAccessLocationPill />
+          </div>
+
           <div className="flex items-center gap-2 px-2.5 py-1.5 rounded-xl bg-zinc-900 border border-zinc-800 text-xs">
             <img
               src={user?.avatar || "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150&auto=format&fit=crop&q=80"}

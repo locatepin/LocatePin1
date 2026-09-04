@@ -136,12 +136,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const syncNewUserToAdminDirectory = (newUser: UserAccount) => {
     try {
-      const saved = localStorage.getItem("locatepin_admin_members_v2");
+      const saved = localStorage.getItem("locatepin_admin_members_v3");
       let list: UserAccount[] = saved ? JSON.parse(saved) : [...INITIAL_USER_ACCOUNTS];
       const exists = list.some((u) => u.email.toLowerCase() === newUser.email.toLowerCase());
       if (!exists) {
         list = [newUser, ...list];
-        localStorage.setItem("locatepin_admin_members_v2", JSON.stringify(list));
+        localStorage.setItem("locatepin_admin_members_v3", JSON.stringify(list));
       }
     } catch (e) {
       console.error("Failed to sync new user to admin directory", e);
@@ -157,7 +157,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     // Check localStorage admin members
     try {
-      const saved = localStorage.getItem("locatepin_admin_members_v2");
+      const saved = localStorage.getItem("locatepin_admin_members_v3");
       if (saved) {
         const list: UserAccount[] = JSON.parse(saved);
         const fromStorage = list.find((u) => u.email.toLowerCase() === cleanEmail);
@@ -203,7 +203,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     } else {
       const isAdmin = cleanEmail.includes("moorthy") || cleanEmail.includes("admin");
       
-      // Clean readable name derivation from email e.g. "nandhini.6707" -> "Nandhini"
+      // Clean readable name derivation from email e.g. "alex.smith" -> "Alex Smith"
       const rawUserPart = cleanEmail.split("@")[0].replace(/[0-9]/g, "").replace(/[._-]/g, " ").trim();
       const fallbackName = rawUserPart ? rawUserPart.replace(/\b\w/g, (l) => l.toUpperCase()) : "Valued Member";
       const derivedName = name?.trim() || (isHjbVip ? "HJB Digital (Enterprise VIP)" : isRaviVip ? "Ravi (HK Ravi Battery Point)" : fallbackName);

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { QRCodeSVG } from "qrcode.react";
 import {
   Building2,
@@ -21,6 +21,7 @@ import {
 } from "lucide-react";
 import { OFFICIAL_BANK_DETAILS, SUBSCRIPTION_PLANS } from "../data/bankAndSubscriptionData";
 import { useAnalytics } from "../context/AnalyticsContext";
+import { useAuth } from "../context/AuthContext";
 
 interface BankPaymentModalProps {
   isOpen: boolean;
@@ -38,14 +39,22 @@ export const BankPaymentModal: React.FC<BankPaymentModalProps> = ({
   onPaymentSubmitted,
 }) => {
   const { trackCustomEvent } = useAnalytics();
+  const { user } = useAuth();
 
   const [activeTab, setActiveTab] = useState<"gpay_paytm" | "upi_qr" | "bank_transfer" | "submit_utr">("gpay_paytm");
   const [copiedField, setCopiedField] = useState<string | null>(null);
 
-  // Form states for submitting UTR
-  const [clientName, setClientName] = useState("Nandhini");
-  const [clientEmail, setClientEmail] = useState("nandhini.6707@gmail.com");
+  // Form states for submitting UTR - populated from authenticated user
+  const [clientName, setClientName] = useState(user?.name || "");
+  const [clientEmail, setClientEmail] = useState(user?.email || "");
   const [businessName, setBusinessName] = useState(defaultBusinessName);
+
+  useEffect(() => {
+    if (user) {
+      if (!clientName && user.name) setClientName(user.name);
+      if (!clientEmail && user.email) setClientEmail(user.email);
+    }
+  }, [user]);
   const [planId, setPlanId] = useState(selectedPlanId);
   const [customAmount, setCustomAmount] = useState<number>(5000);
   const [utrNumber, setUtrNumber] = useState("");

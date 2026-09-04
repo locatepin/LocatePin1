@@ -25,6 +25,7 @@ import {
 import { OFFICIAL_BANK_DETAILS, INITIAL_USER_ACCOUNTS } from "../data/bankAndSubscriptionData";
 import { WelcomeEmailModal } from "./WelcomeEmailModal";
 import { Logo } from "./Logo";
+import { LiveAccessLocationPill } from "./LiveAccessLocationPill";
 
 interface HeaderProps {
   onOpenExportModal: () => void;
@@ -124,6 +125,11 @@ export const Header: React.FC<HeaderProps> = ({
               <option value="themeaquarium.com" className="bg-[#0a0a0a] text-zinc-200">themeaquarium.com (Chennai)</option>
               <option value="app.locatepin.ai" className="bg-[#0a0a0a] text-zinc-200">app.locatepin.ai</option>
             </select>
+          </div>
+
+          {/* Live Access 10 km Location Pill */}
+          <div className="flex-shrink-0">
+            <LiveAccessLocationPill />
           </div>
 
           {/* Timeframe */}

@@ -15,9 +15,12 @@ import {
   Zap,
 } from "lucide-react";
 import { Logo } from "./Logo";
+import { LiveAccessLocationPill } from "./LiveAccessLocationPill";
+import { useAccessLocation } from "../context/AccessLocationContext";
 
 export const LoginPage: React.FC = () => {
   const { loginWithGoogle, loginWithCredentials, isLoading } = useAuth();
+  const { location } = useAccessLocation();
 
   const [authMode, setAuthMode] = useState<"google" | "password">("google");
   
@@ -77,15 +80,12 @@ export const LoginPage: React.FC = () => {
         </div>
 
         {/* Security & Region Badges */}
-        <div className="hidden sm:flex items-center gap-3 text-xs font-mono">
-          <span className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-zinc-900/80 border border-zinc-800 text-zinc-300">
+        <div className="flex items-center gap-2 sm:gap-3 text-xs font-mono">
+          <span className="hidden md:flex items-center gap-1.5 px-3 py-1 rounded-full bg-zinc-900/80 border border-zinc-800 text-zinc-300">
             <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
             <span>256-Bit TLS Secured</span>
           </span>
-          <span className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#17130b] border border-[#c5a059]/30 text-[#c5a059]">
-            <MapPin className="w-3.5 h-3.5" />
-            <span>Chennai & Bangalore Live</span>
-          </span>
+          <LiveAccessLocationPill />
         </div>
       </nav>
 
@@ -121,7 +121,7 @@ export const LoginPage: React.FC = () => {
                 <div>
                   <h4 className="text-xs font-bold text-white">Google Maps & Local Search Rank Tracking</h4>
                   <p className="text-[11px] text-zinc-400 mt-0.5">
-                    High-intent GPS route lookups and direct telephone call leads generated across Chennai & Bangalore.
+                    High-intent GPS route lookups and direct telephone call leads generated live across {location.city} (10 km active radius).
                   </p>
                 </div>
               </div>
@@ -241,7 +241,7 @@ export const LoginPage: React.FC = () => {
                         setGmailId(e.target.value);
                         if (gmailError) setGmailError("");
                       }}
-                      placeholder="e.g. nandhini.6707@gmail.com or yourname@gmail.com"
+                      placeholder="e.g. yourname@gmail.com"
                       className="w-full bg-zinc-950 border border-zinc-800 rounded-xl pl-10 pr-3.5 py-3 text-xs text-white placeholder-zinc-500 outline-none focus:border-[#c5a059] transition-colors"
                     />
                   </div>
@@ -260,7 +260,7 @@ export const LoginPage: React.FC = () => {
                       type="text"
                       value={googleUserName}
                       onChange={(e) => setGoogleUserName(e.target.value)}
-                      placeholder="e.g. Nandhini / Business Owner Name"
+                      placeholder="e.g. Your Name / Business Owner Name"
                       className="w-full bg-zinc-950 border border-zinc-800 rounded-xl pl-10 pr-3.5 py-2.5 text-xs text-white placeholder-zinc-500 outline-none focus:border-[#c5a059] transition-colors"
                     />
                   </div>
@@ -318,7 +318,7 @@ export const LoginPage: React.FC = () => {
                       required
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
-                      placeholder="e.g. nandhini.6707@gmail.com"
+                      placeholder="e.g. yourname@gmail.com"
                       className="w-full bg-zinc-950 border border-zinc-800 rounded-xl pl-10 pr-3.5 py-2.5 text-xs text-white outline-none focus:border-[#c5a059]"
                     />
                   </div>

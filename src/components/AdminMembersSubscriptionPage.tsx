@@ -46,13 +46,14 @@ export const AdminMembersSubscriptionPage: React.FC = () => {
 
   // Local state for interactive administration
   const [members, setMembers] = useState<UserAccount[]>(() => {
-    const saved = localStorage.getItem("locatepin_admin_members_v2");
+    const saved = localStorage.getItem("locatepin_admin_members_v3") || localStorage.getItem("locatepin_admin_members_v2");
     if (saved) {
       try {
         let parsed: UserAccount[] = JSON.parse(saved);
+        // Clean out any legacy test records
+        let updated = parsed.filter((m) => !m.email.toLowerCase().includes("nandhini"));
         // Ensure VIP members (digi.hjb@gmail.com & digitalhkravibatterypoint@gmail.com) are always present in admin list
         const vipEmails = ["digi.hjb@gmail.com", "digitalhkravibatterypoint@gmail.com"];
-        let updated = [...parsed];
         for (const vEmail of vipEmails) {
           if (!updated.some((m) => m.email.toLowerCase() === vEmail)) {
             const vipUser = INITIAL_USER_ACCOUNTS.find((u) => u.email.toLowerCase() === vEmail);
@@ -61,9 +62,7 @@ export const AdminMembersSubscriptionPage: React.FC = () => {
             }
           }
         }
-        if (updated.length !== parsed.length) {
-          localStorage.setItem("locatepin_admin_members_v2", JSON.stringify(updated));
-        }
+        localStorage.setItem("locatepin_admin_members_v3", JSON.stringify(updated));
         return updated;
       } catch (e) {
         return INITIAL_USER_ACCOUNTS;
@@ -73,12 +72,13 @@ export const AdminMembersSubscriptionPage: React.FC = () => {
   });
 
   const [businesses, setBusinesses] = useState<BusinessListing[]>(() => {
-    const saved = localStorage.getItem("locatepin_admin_businesses_v2");
+    const saved = localStorage.getItem("locatepin_admin_businesses_v3") || localStorage.getItem("locatepin_admin_businesses_v2");
     if (saved) {
       try {
         let parsed: BusinessListing[] = JSON.parse(saved);
+        // Clean out any legacy test records
+        let updated = parsed.filter((b) => !b.ownerEmail?.toLowerCase().includes("nandhini"));
         const vipEmails = ["digi.hjb@gmail.com", "digitalhkravibatterypoint@gmail.com"];
-        let updated = [...parsed];
         for (const vEmail of vipEmails) {
           if (!updated.some((b) => b.ownerEmail?.toLowerCase() === vEmail)) {
             const vipBiz = INITIAL_BUSINESS_LISTINGS.find((b) => b.ownerEmail?.toLowerCase() === vEmail);
@@ -87,9 +87,7 @@ export const AdminMembersSubscriptionPage: React.FC = () => {
             }
           }
         }
-        if (updated.length !== parsed.length) {
-          localStorage.setItem("locatepin_admin_businesses_v2", JSON.stringify(updated));
-        }
+        localStorage.setItem("locatepin_admin_businesses_v3", JSON.stringify(updated));
         return updated;
       } catch (e) {
         return INITIAL_BUSINESS_LISTINGS;
@@ -118,7 +116,7 @@ export const AdminMembersSubscriptionPage: React.FC = () => {
 
   const saveMembers = (updated: UserAccount[]) => {
     setMembers(updated);
-    localStorage.setItem("locatepin_admin_members_v2", JSON.stringify(updated));
+    localStorage.setItem("locatepin_admin_members_v3", JSON.stringify(updated));
   };
 
   const showNotification = (msg: string) => {
@@ -251,7 +249,7 @@ export const AdminMembersSubscriptionPage: React.FC = () => {
         verifiedAt: new Date().toISOString().split("T")[0],
       };
       setBusinesses([newBiz, ...businesses]);
-      localStorage.setItem("locatepin_admin_businesses_v2", JSON.stringify([newBiz, ...businesses]));
+      localStorage.setItem("locatepin_admin_businesses_v3", JSON.stringify([newBiz, ...businesses]));
     }
 
     setIsAddModalOpen(false);

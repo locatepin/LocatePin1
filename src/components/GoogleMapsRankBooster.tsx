@@ -210,7 +210,7 @@ export const GoogleMapsRankBooster: React.FC = () => {
     plusCode: "36P7+2W Chennai",
     address: "26/1, 12th Lane, 3rd Ave, Anna Nagar, Chennai",
     phone: "098841 81562",
-    radius: "15 km Local Hyper-Targeting Zone",
+    radius: "10 km Local Hyper-Targeting Zone",
   };
 
   const handleLocatePin = () => {
@@ -762,7 +762,7 @@ export const GoogleMapsRankBooster: React.FC = () => {
                 Lat: <span className="text-[#c5a059]">{pinDetails.lat}</span> &bull; Lng: <span className="text-[#c5a059]">{pinDetails.lng}</span>
               </div>
               <div className="absolute top-2 right-2 px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 text-[10px] font-mono border border-emerald-500/20">
-                15 km Radius
+                10 km Live Radius
               </div>
             </div>
 
