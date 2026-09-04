@@ -95,10 +95,10 @@ export const LoginPage: React.FC = () => {
           
           {/* Left Column: Brand Story & Real-time Value */}
           <div className="lg:col-span-6 space-y-6 text-left">
-            <div className="flex flex-wrap items-center gap-3">
-              <Logo size="lg" showTagline={true} />
-              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#1c160a] border border-[#c5a059]/40 text-[#c5a059] text-xs font-bold tracking-wide">
-                <Sparkles className="w-3.5 h-3.5" />
+            <div className="flex flex-wrap items-center gap-4 sm:gap-5">
+              <Logo size="hero" showTagline={true} />
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#141008]/90 border border-[#c5a059]/50 text-[#c5a059] text-xs sm:text-sm font-bold tracking-wide shadow-sm hover:border-[#c5a059] transition-colors flex-shrink-0">
+                <Sparkles className="w-4 h-4 text-[#c5a059]" />
                 <span>Google Maps Local 3-Pack</span>
               </div>
             </div>
