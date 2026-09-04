@@ -61,14 +61,14 @@ interface AnalyticsContextType {
   filterDevice: string;
   setFilterDevice: (d: string) => void;
   // Actions
-  triggerManualTrafficBurst: (count: number, channel?: string) => void;
+  triggerManualTrafficBurst: (count: number, channel?: string, geoTarget?: string) => void;
   trackCustomEvent: (eventName: string, path: string, metadata?: any) => void;
   resolveAnomaly: (id: string) => void;
   timeRange: string;
   setTimeRange: (range: string) => void;
   selectedWebsite: string;
   setSelectedWebsite: (site: string) => void;
-  loadWebsiteUrl: (url: string, volume?: number, channel?: string, keywords?: string[]) => void;
+  loadWebsiteUrl: (url: string, volume?: number, channel?: string, keywords?: string[], geoTarget?: string) => void;
 }
 
 const AnalyticsContext = createContext<AnalyticsContextType | undefined>(undefined);
@@ -146,11 +146,44 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({ chi
   }, []);
 
   // Manual burst generator
-  const triggerManualTrafficBurst = useCallback((count: number, channelSource?: string) => {
+  const triggerManualTrafficBurst = useCallback((count: number, channelSource?: string, geoTarget?: string) => {
     const newSessions = generateSeedSessions(Math.min(count, 35));
     if (channelSource) {
       newSessions.forEach((s) => {
         s.channel = channelSource as any;
+      });
+    }
+
+    if (geoTarget) {
+      const isIndia = geoTarget.toLowerCase().includes("india") ||
+                      geoTarget.toLowerCase().includes("chennai") ||
+                      geoTarget.toLowerCase().includes("bangalore") ||
+                      geoTarget.toLowerCase().includes("bengaluru") ||
+                      geoTarget.toLowerCase().includes("tamil nadu") ||
+                      geoTarget.toLowerCase().includes("karnataka") ||
+                      geoTarget.toLowerCase().includes("mumbai") ||
+                      geoTarget.toLowerCase().includes("delhi") ||
+                      geoTarget.toLowerCase().includes("hyderabad") ||
+                      geoTarget.toLowerCase().includes("coimbatore");
+      const isUS = geoTarget.toLowerCase().includes("united states") || geoTarget.toLowerCase().includes("new york") || geoTarget.toLowerCase().includes("san francisco");
+      const isUK = geoTarget.toLowerCase().includes("united kingdom") || geoTarget.toLowerCase().includes("london");
+      const isUAE = geoTarget.toLowerCase().includes("emirates") || geoTarget.toLowerCase().includes("dubai");
+
+      newSessions.forEach((s) => {
+        s.city = geoTarget;
+        if (isIndia) {
+          s.country = "India";
+          s.countryCode = "IN";
+        } else if (isUS) {
+          s.country = "United States";
+          s.countryCode = "US";
+        } else if (isUK) {
+          s.country = "United Kingdom";
+          s.countryCode = "GB";
+        } else if (isUAE) {
+          s.country = "United Arab Emirates";
+          s.countryCode = "AE";
+        }
       });
     }
 
@@ -166,11 +199,14 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     });
 
     // Fire test event
-    trackCustomEvent(`Traffic Burst Injected (+${count} sessions)`, "/features/ai-traffic-generator", { channel: channelSource || "AI Simulator" });
+    trackCustomEvent(`Traffic Burst Injected (+${count} sessions)`, "/features/ai-traffic-generator", {
+      channel: channelSource || "AI Simulator",
+      geoTarget: geoTarget || "Default Region"
+    });
   }, [trackCustomEvent]);
 
   // Load website URL and customize tracking
-  const loadWebsiteUrl = useCallback((url: string, volume: number = 50, channelSource: string = "Organic Search", customKeywords: string[] = []) => {
+  const loadWebsiteUrl = useCallback((url: string, volume: number = 50, channelSource: string = "Organic Search", customKeywords: string[] = [], geoTarget?: string) => {
     let cleanUrl = url.trim();
     if (!cleanUrl.startsWith("http://") && !cleanUrl.startsWith("https://")) {
       cleanUrl = "https://" + cleanUrl;
@@ -197,7 +233,7 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     setTopPages(adaptedPages);
 
     // Trigger burst
-    triggerManualTrafficBurst(volume, channelSource);
+    triggerManualTrafficBurst(volume, channelSource, geoTarget);
 
     // Track event
     trackCustomEvent(`Website Loaded & Traffic Streamed: ${cleanUrl}`, "/", {
@@ -205,6 +241,7 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({ chi
       domain,
       keywords: customKeywords,
       channel: channelSource,
+      geoTarget: geoTarget || "Live Geo Region",
       visitors: volume,
     });
   }, [trackCustomEvent, triggerManualTrafficBurst]);

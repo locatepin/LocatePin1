@@ -1,5 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { useAnalytics } from "../context/AnalyticsContext";
+import { useAccessLocation } from "../context/AccessLocationContext";
+import { getDynamicGeoRegionGroups } from "../utils/geoRegionHelper";
 import {
   Link as LinkIcon,
   Zap,
@@ -23,6 +25,7 @@ import {
   Award,
   Navigation,
   Phone,
+  Radio,
 } from "lucide-react";
 import confetti from "canvas-confetti";
 
@@ -43,6 +46,13 @@ export const WebsiteTrafficGeneratorBar: React.FC<WebsiteTrafficGeneratorBarProp
     trackCustomEvent,
   } = useAnalytics();
 
+  const { location, isLocatingGps, requestGpsLocation } = useAccessLocation();
+
+  // Dynamic geo options according to live location with states and country
+  const geoRegionGroups = useMemo(() => {
+    return getDynamicGeoRegionGroups(location);
+  }, [location]);
+
   const [inputUrl, setInputUrl] = useState("https://themeaquarium.com");
   const [currentKeyword, setCurrentKeyword] = useState("");
   const [keywords, setKeywords] = useState<string[]>([
@@ -54,7 +64,18 @@ export const WebsiteTrafficGeneratorBar: React.FC<WebsiteTrafficGeneratorBarProp
   const [trafficVolume, setTrafficVolume] = useState<number>(5000);
   const [customVolumeInput, setCustomVolumeInput] = useState<string>("5000");
   const [selectedChannel, setSelectedChannel] = useState<string>("Google Maps Local Pack");
-  const [selectedCountry, setSelectedCountry] = useState<string>("Chennai, India");
+  const [selectedCountry, setSelectedCountry] = useState<string>(() => {
+    const groups = getDynamicGeoRegionGroups(location);
+    return groups[0]?.options[0]?.value || "Chennai (Anna Nagar / 3rd Ave Hub)";
+  });
+
+  // Automatically update selected geo region when the live location changes (GPS, IP, or user selection)
+  useEffect(() => {
+    if (geoRegionGroups.length > 0 && geoRegionGroups[0].options.length > 0) {
+      const primaryOption = geoRegionGroups[0].options[0].value;
+      setSelectedCountry(primaryOption);
+    }
+  }, [location.city, location.region, location.country, location.suburb]);
   const [isGenerating, setIsGenerating] = useState(false);
   const [isLoadingWebsite, setIsLoadingWebsite] = useState(false);
   const [generationLog, setGenerationLog] = useState<string | null>(null);
@@ -171,8 +192,8 @@ export const WebsiteTrafficGeneratorBar: React.FC<WebsiteTrafficGeneratorBarProp
     setIsGenerating(true);
     setGenerationLog(`Connecting to ${cleanUrl} and routing ${trafficVolume} high-intent visitors...`);
 
-    // Influx traffic with chosen channel
-    loadWebsiteUrl(cleanUrl, trafficVolume, selectedChannel, keywords);
+    // Influx traffic with chosen channel & targeted geo region
+    loadWebsiteUrl(cleanUrl, trafficVolume, selectedChannel, keywords, selectedCountry);
 
     try {
       confetti({
@@ -186,7 +207,7 @@ export const WebsiteTrafficGeneratorBar: React.FC<WebsiteTrafficGeneratorBarProp
     setTimeout(() => {
       setIsGenerating(false);
       setGenerationLog(
-        `Successfully generated +${trafficVolume} concurrent visitors for ${cleanUrl} via ${selectedChannel} targeting "${keywords[0] || 'organic query'}"`
+        `Successfully generated +${trafficVolume} concurrent visitors for ${cleanUrl} via ${selectedChannel} targeting "${keywords[0] || 'organic query'}" in ${selectedCountry}`
       );
       if (onGenerated) onGenerated();
     }, 1200);
@@ -647,44 +668,63 @@ export const WebsiteTrafficGeneratorBar: React.FC<WebsiteTrafficGeneratorBarProp
             </select>
           </div>
 
-          {/* Primary Geo Target */}
+          {/* Primary Geo Target - Dynamically synchronized with Live Location */}
           <div className="space-y-1.5">
-            <label className="block text-[10px] uppercase tracking-widest font-semibold text-zinc-400">
-              Target Geo Region
-            </label>
+            <div className="flex items-center justify-between gap-1">
+              <label className="block text-[10px] uppercase tracking-widest font-semibold text-zinc-400 flex items-center gap-1.5">
+                <span>Target Geo Region</span>
+                <span className="inline-flex items-center gap-1 text-[9px] px-1.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-mono font-medium">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                  Live: {location.city}, {location.region}, {location.country}
+                </span>
+              </label>
+
+              {/* Sync Live GPS / Location Button */}
+              <button
+                type="button"
+                onClick={() => {
+                  if (geoRegionGroups.length > 0 && geoRegionGroups[0].options.length > 0) {
+                    setSelectedCountry(geoRegionGroups[0].options[0].value);
+                  }
+                }}
+                className="text-[10px] text-[#c5a059] hover:text-[#e6ca85] flex items-center gap-1 transition-colors cursor-pointer flex-shrink-0"
+                title={`Sync targeted region to live location: ${location.city}, ${location.region}`}
+              >
+                <Radio className="w-2.5 h-2.5 text-emerald-400 animate-pulse" />
+                <span>Sync Live ({location.city})</span>
+              </button>
+            </div>
+
             <select
               value={selectedCountry}
               onChange={(e) => setSelectedCountry(e.target.value)}
-              className="w-full bg-[#050505] border border-zinc-800 rounded-xl px-3 py-2.5 text-xs text-zinc-200 focus:outline-none focus:border-[#c5a059]"
+              className="w-full bg-[#050505] border border-zinc-800 rounded-xl px-3 py-2.5 text-xs text-zinc-200 focus:outline-none focus:border-[#c5a059] shadow-inner"
             >
-              <optgroup label="Chennai Focus Areas" className="bg-[#0a0a0a] text-[#c5a059] font-bold">
-                <option value="Chennai, India" className="bg-[#0a0a0a] text-zinc-200 font-normal">Chennai (Anna Nagar / 3rd Ave Hub)</option>
-                <option value="Chennai - Thiruvanmiyur" className="bg-[#0a0a0a] text-zinc-200 font-normal">Chennai - Thiruvanmiyur (Coastal / South Hub)</option>
-                <option value="Chennai - Besant Nagar" className="bg-[#0a0a0a] text-zinc-200 font-normal">Chennai - Besant Nagar (Basent Nagar / Beach)</option>
-                <option value="Chennai - ECR" className="bg-[#0a0a0a] text-zinc-200 font-normal">Chennai - ECR (East Coast Road Coastal Belt)</option>
-                <option value="Chennai - OMR" className="bg-[#0a0a0a] text-zinc-200 font-normal">Chennai - OMR (IT Expressway & Corridor)</option>
-                <option value="Chennai - Adyar & Mylapore" className="bg-[#0a0a0a] text-zinc-200 font-normal">Chennai - Adyar & Mylapore</option>
-                <option value="Chennai - T. Nagar & Kilpauk" className="bg-[#0a0a0a] text-zinc-200 font-normal">Chennai - T. Nagar & Kilpauk</option>
-                <option value="Chennai - Velachery & Guindy" className="bg-[#0a0a0a] text-zinc-200 font-normal">Chennai - Velachery & Guindy</option>
-              </optgroup>
-              <optgroup label="Bangalore / Bengaluru Focus Areas" className="bg-[#0a0a0a] text-[#c5a059] font-bold">
-                <option value="Bangalore - Central & MG Road" className="bg-[#0a0a0a] text-zinc-200 font-normal">Bangalore (Central / MG Road & Brigade Hub)</option>
-                <option value="Bangalore - Indiranagar" className="bg-[#0a0a0a] text-zinc-200 font-normal">Bangalore - Indiranagar (100ft Rd / CMH Hub)</option>
-                <option value="Bangalore - Koramangala" className="bg-[#0a0a0a] text-zinc-200 font-normal">Bangalore - Koramangala (Startup & Retail Belt)</option>
-                <option value="Bangalore - Whitefield" className="bg-[#0a0a0a] text-zinc-200 font-normal">Bangalore - Whitefield (ITPL & Marathahalli)</option>
-                <option value="Bangalore - HSR Layout" className="bg-[#0a0a0a] text-zinc-200 font-normal">Bangalore - HSR Layout & BTM</option>
-                <option value="Bangalore - Jayanagar" className="bg-[#0a0a0a] text-zinc-200 font-normal">Bangalore - Jayanagar & JP Nagar</option>
-                <option value="Bangalore - Electronic City" className="bg-[#0a0a0a] text-zinc-200 font-normal">Bangalore - Electronic City Phase 1 & 2</option>
-                <option value="Bangalore - Malleshwaram" className="bg-[#0a0a0a] text-zinc-200 font-normal">Bangalore - Malleshwaram & Rajajinagar</option>
-                <option value="Bangalore - Hebbal & Yelahanka" className="bg-[#0a0a0a] text-zinc-200 font-normal">Bangalore - Hebbal & Yelahanka (North Hub)</option>
-              </optgroup>
-              <optgroup label="Broader Regions" className="bg-[#0a0a0a] text-zinc-400 font-bold">
-                <option value="Karnataka State" className="bg-[#0a0a0a] text-zinc-200 font-normal">Karnataka (Statewide / Bengaluru Hub)</option>
-                <option value="Tamil Nadu State" className="bg-[#0a0a0a] text-zinc-200 font-normal">Tamil Nadu (Statewide)</option>
-                <option value="India Nationwide" className="bg-[#0a0a0a] text-zinc-200 font-normal">India Nationwide</option>
-                <option value="United States" className="bg-[#0a0a0a] text-zinc-200 font-normal">United States (Tier 1)</option>
-                <option value="Global Distributed" className="bg-[#0a0a0a] text-zinc-200 font-normal">Global Distributed</option>
-              </optgroup>
+              {geoRegionGroups.map((group, groupIdx) => (
+                <optgroup
+                  key={groupIdx}
+                  label={group.label}
+                  className={`bg-[#0a0a0a] font-bold ${
+                    groupIdx === 0
+                      ? "text-[#c5a059]"
+                      : groupIdx === 1
+                      ? "text-blue-400"
+                      : groupIdx === 2
+                      ? "text-emerald-400"
+                      : "text-zinc-400"
+                  }`}
+                >
+                  {group.options.map((option, optIdx) => (
+                    <option
+                      key={optIdx}
+                      value={option.value}
+                      className="bg-[#0a0a0a] text-zinc-200 font-normal py-1"
+                    >
+                      {option.label}
+                    </option>
+                  ))}
+                </optgroup>
+              ))}
             </select>
           </div>
         </div>
