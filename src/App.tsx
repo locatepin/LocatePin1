@@ -20,6 +20,7 @@ import { ExportReportModal } from "./components/ExportReportModal";
 import { AnomaliesBar } from "./components/AnomaliesBar";
 import { AdminMembersSubscriptionPage } from "./components/AdminMembersSubscriptionPage";
 import { MapPin } from "lucide-react";
+import { Logo } from "./components/Logo";
 
 function AppContent() {
   const { isAuthenticated, hasActiveSubscription, isLoading } = useAuth();
@@ -31,10 +32,12 @@ function AppContent() {
   if (isLoading) {
     return (
       <div className="min-h-screen bg-[#050505] flex flex-col items-center justify-center p-4 text-[#e5e5e5]">
-        <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#1f1a10] to-[#0a0a0a] border border-[#c5a059]/40 flex items-center justify-center text-[#c5a059] shadow-[0_0_25px_rgba(197,160,89,0.25)] animate-pulse mb-4">
-          <MapPin className="w-6 h-6" />
+        <div className="animate-pulse mb-4">
+          <Logo size="xl" showText={false} imageOnly={true} />
         </div>
-        <p className="font-serif italic text-base text-white">Locate Pin<span className="text-[#c5a059]">.ai</span></p>
+        <p className="font-serif italic text-lg text-white font-bold">
+          LocatePin<span className="text-[#c5a059] font-sans">.ai</span>
+        </p>
         <span className="text-xs text-zinc-500 font-mono mt-1">Initializing Secure Session...</span>
       </div>
     );
@@ -93,12 +96,13 @@ function AppContent() {
 
       {/* 4. Footer */}
       <footer className="border-t border-zinc-800/80 bg-[#0a0a0a] py-6 mt-12 text-center text-xs text-zinc-500">
-        <div className="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2">
-          <p className="flex items-center gap-2">
-            <span className="font-serif italic text-sm text-white">Locate Pin<span className="text-[#c5a059]">.ai</span></span>
+        <div className="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-3">
+          <div className="flex items-center gap-2">
+            <Logo size="xs" imageOnly={true} />
+            <span className="font-serif italic text-sm text-white font-bold">LocatePin<span className="text-[#c5a059] font-sans">.ai</span></span>
             <span>&bull;</span>
             <span>Google Maps #1 Ranking & Real-Time Traffic Engine</span>
-          </p>
+          </div>
           <div className="flex items-center gap-4 text-zinc-500 font-mono text-[11px]">
             <span>Lossless Concurrency Telemetry</span>
             <span>&bull;</span>

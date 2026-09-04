@@ -21,6 +21,7 @@ import {
 } from "lucide-react";
 import { OFFICIAL_BANK_DETAILS } from "../data/bankAndSubscriptionData";
 import { WelcomeEmailModal } from "./WelcomeEmailModal";
+import { Logo } from "./Logo";
 
 export const SubscriptionModelPage: React.FC = () => {
   const { user, activateSubscription, startFreeTrial, logout } = useAuth();
@@ -180,12 +181,10 @@ export const SubscriptionModelPage: React.FC = () => {
       {/* Top Navbar */}
       <nav className="w-full max-w-7xl mx-auto px-4 sm:px-6 py-3.5 sm:py-4 flex items-center justify-between z-10 border-b border-zinc-800/80 bg-[#080808]/80 backdrop-blur-md">
         <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-[#1f1a10] to-[#0a0a0a] border border-[#c5a059]/50 flex items-center justify-center text-[#c5a059] shadow-[0_0_15px_rgba(197,160,89,0.2)]">
-            <MapPin className="w-5 h-5 text-[#c5a059]" />
-          </div>
+          <Logo size="sm" imageOnly={true} />
           <div>
-            <span className="font-serif italic text-lg tracking-tight text-white flex items-center gap-1">
-              Locate Pin<span className="text-[#c5a059] font-sans font-bold text-sm not-italic">.ai</span>
+            <span className="font-serif italic text-lg tracking-tight text-white flex items-center gap-1 font-bold">
+              LocatePin<span className="text-[#c5a059] font-sans font-bold text-sm not-italic">.ai</span>
             </span>
             <span className="text-[9px] sm:text-[10px] uppercase tracking-[0.15em] text-zinc-400 block">
               Step 2 of 2: Subscription & Activation

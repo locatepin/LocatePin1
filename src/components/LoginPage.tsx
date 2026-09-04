@@ -14,6 +14,7 @@ import {
   User,
   Zap,
 } from "lucide-react";
+import { Logo } from "./Logo";
 
 export const LoginPage: React.FC = () => {
   const { loginWithGoogle, loginWithCredentials, isLoading } = useAuth();
@@ -64,12 +65,10 @@ export const LoginPage: React.FC = () => {
       {/* Top Navbar */}
       <nav className="w-full max-w-7xl mx-auto px-4 sm:px-6 py-4 sm:py-5 flex items-center justify-between z-10">
         <div className="flex items-center gap-3">
-          <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-br from-[#1f1a10] to-[#0a0a0a] border border-[#c5a059]/50 flex items-center justify-center text-[#c5a059] shadow-[0_0_20px_rgba(197,160,89,0.25)]">
-            <MapPin className="w-5 h-5 text-[#c5a059]" />
-          </div>
+          <Logo size="md" imageOnly={true} />
           <div>
-            <span className="font-serif italic text-lg sm:text-xl tracking-tight text-white flex items-center gap-1">
-              Locate Pin<span className="text-[#c5a059] font-sans font-bold text-sm not-italic">.ai</span>
+            <span className="font-serif italic text-lg sm:text-xl tracking-tight text-white flex items-center gap-1 font-bold">
+              LocatePin<span className="text-[#c5a059] font-sans font-bold text-sm not-italic">.ai</span>
             </span>
             <span className="text-[9px] sm:text-[10px] uppercase tracking-[0.15em] text-zinc-400 block">
               Google Maps #1 & Real-Time Traffic Engine
@@ -96,9 +95,12 @@ export const LoginPage: React.FC = () => {
           
           {/* Left Column: Brand Story & Real-time Value */}
           <div className="lg:col-span-6 space-y-6 text-left">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#1c160a] border border-[#c5a059]/40 text-[#c5a059] text-xs font-bold tracking-wide">
-              <Sparkles className="w-3.5 h-3.5" />
-              <span>Google Maps Local 3-Pack Surge</span>
+            <div className="flex flex-wrap items-center gap-3">
+              <Logo size="lg" showTagline={true} />
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#1c160a] border border-[#c5a059]/40 text-[#c5a059] text-xs font-bold tracking-wide">
+                <Sparkles className="w-3.5 h-3.5" />
+                <span>Google Maps Local 3-Pack</span>
+              </div>
             </div>
 
             <div className="space-y-3">

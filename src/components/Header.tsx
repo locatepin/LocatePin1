@@ -24,6 +24,7 @@ import {
 } from "lucide-react";
 import { OFFICIAL_BANK_DETAILS, INITIAL_USER_ACCOUNTS } from "../data/bankAndSubscriptionData";
 import { WelcomeEmailModal } from "./WelcomeEmailModal";
+import { Logo } from "./Logo";
 
 interface HeaderProps {
   onOpenExportModal: () => void;
@@ -70,13 +71,11 @@ export const Header: React.FC<HeaderProps> = ({
         {/* Left: Brand & Live Status */}
         <div className="flex items-center justify-between sm:justify-start gap-3">
           <div className="flex items-center gap-3">
-            <div className="flex items-center justify-center w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-br from-[#1f1a10] to-[#0a0a0a] border border-[#c5a059]/50 shadow-[0_0_15px_rgba(197,160,89,0.2)] text-[#c5a059] flex-shrink-0">
-              <MapPin className="w-5 h-5 text-[#c5a059]" />
-            </div>
+            <Logo size="md" imageOnly={true} />
             <div>
               <div className="flex items-center gap-2">
                 <span className="font-serif italic text-lg sm:text-xl tracking-tight text-white flex items-center gap-1">
-                  Locate Pin<span className="text-[#c5a059] font-sans font-bold text-sm not-italic">.ai</span>
+                  LocatePin<span className="text-[#c5a059] font-sans font-bold text-sm not-italic">.ai</span>
                 </span>
                 <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-[9px] sm:text-[10px] font-bold tracking-wide">
                   <span className="relative flex h-1.5 w-1.5">

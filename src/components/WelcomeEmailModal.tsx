@@ -18,6 +18,7 @@ import {
   CheckCircle2,
 } from "lucide-react";
 import { OFFICIAL_BANK_DETAILS } from "../data/bankAndSubscriptionData";
+import { Logo } from "./Logo";
 
 interface WelcomeEmailModalProps {
   isOpen: boolean;
@@ -119,9 +120,7 @@ Official Beneficiary Settlement:
         <div className="p-4 sm:p-5 bg-[#121212]/80 border-b border-zinc-800/80 space-y-2 text-xs">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
             <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#1f1a10] to-[#0a0a0a] border border-[#c5a059]/60 flex items-center justify-center text-[#c5a059] font-serif font-bold text-xs">
-                LP
-              </div>
+              <Logo size="sm" imageOnly={true} />
               <div>
                 <span className="font-bold text-white block">
                   Locate Pin Onboarding &lt;support@locatepin.ai&gt;
