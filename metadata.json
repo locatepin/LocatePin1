@@ -1,0 +1,6 @@
+{
+  "name": "Locate Pin - Google Maps #1 & Real-Time Local Traffic Engine",
+  "description": "Locate Pin real-time behavioral analytics and Google Maps Local 3-Pack rank booster with automated AI keyword surges, live visitor tracking, and multi-location GPS navigation telemetry.",
+  "requestFramePermissions": ["geolocation"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
