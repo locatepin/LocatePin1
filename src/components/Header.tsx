@@ -26,6 +26,7 @@ import { OFFICIAL_BANK_DETAILS, INITIAL_USER_ACCOUNTS } from "../data/bankAndSub
 import { WelcomeEmailModal } from "./WelcomeEmailModal";
 import { Logo } from "./Logo";
 import { LiveAccessLocationPill } from "./LiveAccessLocationPill";
+import { CurrencySelector } from "./CurrencySelector";
 
 interface HeaderProps {
   onOpenExportModal: () => void;
@@ -130,6 +131,11 @@ export const Header: React.FC<HeaderProps> = ({
           {/* Live Access 10 km Location Pill */}
           <div className="flex-shrink-0">
             <LiveAccessLocationPill />
+          </div>
+
+          {/* Multi-Currency Selector Pill */}
+          <div className="flex-shrink-0">
+            <CurrencySelector variant="pill" />
           </div>
 
           {/* Timeframe */}

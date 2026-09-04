@@ -18,11 +18,16 @@ import {
   AlertTriangle,
   Mail,
   ExternalLink,
+  Globe,
+  Coins,
 } from "lucide-react";
 import { OFFICIAL_BANK_DETAILS } from "../data/bankAndSubscriptionData";
 import { WelcomeEmailModal } from "./WelcomeEmailModal";
 import { Logo } from "./Logo";
 import { LiveAccessLocationPill } from "./LiveAccessLocationPill";
+import { useCurrency } from "../context/CurrencyContext";
+import { CurrencySelector } from "./CurrencySelector";
+import { BankPaymentModal } from "./BankPaymentModal";
 
 export const SubscriptionModelPage: React.FC = () => {
   const { user, activateSubscription, startFreeTrial, logout } = useAuth();
@@ -74,6 +79,12 @@ export const SubscriptionModelPage: React.FC = () => {
   const [copiedField, setCopiedField] = useState<string | null>(null);
   const [isActivating, setIsActivating] = useState(false);
   const [isWelcomeEmailOpen, setIsWelcomeEmailOpen] = useState(false);
+  const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
+
+  const { selectedCurrency, currencyInfo, getDualDisplay } = useCurrency();
+
+  const proPriceDual = getDualDisplay(5000);
+  const entPriceDual = getDualDisplay(15000);
 
   const isTrialExpired = user?.subscriptionStatus === "expired";
 
@@ -130,8 +141,9 @@ export const SubscriptionModelPage: React.FC = () => {
     {
       id: "pro",
       name: "Google Pay & Paytm Monthly SEO",
-      price: "₹5,000",
+      price: proPriceDual.primary,
       period: "/ month",
+      originalPrice: selectedCurrency !== "INR" ? proPriceDual.secondary : undefined,
       trafficTarget: "50,000 visits/mo",
       features: [
         "#1 Google Maps Dominance in Chennai & Bangalore 24/7",
@@ -140,6 +152,7 @@ export const SubscriptionModelPage: React.FC = () => {
         "Direct settlement via Google Pay & Paytm",
         "Karur Vysya Bank instant UTR clearance (Moorthy S L)",
         "VIP support & instant local anomaly auto-healing",
+        selectedCurrency !== "INR" ? `Payable in ${selectedCurrency} at bank forex rate` : "Accepts all global currencies (USD, EUR, etc.)",
       ],
       badge: "Official Retainer & Unlimited",
       popular: !isVipUser,
@@ -149,16 +162,16 @@ export const SubscriptionModelPage: React.FC = () => {
     {
       id: "enterprise",
       name: "Enterprise Multi-Location",
-      price: isVipUser ? "₹0" : "₹15,000",
+      price: isVipUser ? "₹0" : entPriceDual.primary,
       period: isVipUser ? "for 1 Full Year (VIP Free Grant)" : "/ month",
-      originalPrice: isVipUser ? "₹15,000/mo (₹1,80,000/yr)" : undefined,
+      originalPrice: isVipUser ? "₹15,000/mo (₹1,80,000/yr)" : (selectedCurrency !== "INR" ? entPriceDual.secondary : undefined),
       trafficTarget: "150,000 visits/mo",
       features: [
         "Multi-branch & franchise ranking grid",
         "Unlimited custom high-intent keywords",
         "Real-time concurrent visitor influx API",
         "Dedicated SEO account executive",
-        "Corporate NEFT / RTGS invoicing",
+        "Corporate NEFT / RTGS & SWIFT Wire invoicing",
         ...(isVipUser
           ? [
               "365 Days 100% Free VIP Enterprise Access Granted",
@@ -198,6 +211,8 @@ export const SubscriptionModelPage: React.FC = () => {
           <div className="hidden sm:block">
             <LiveAccessLocationPill />
           </div>
+
+          <CurrencySelector variant="pill" />
 
           <div className="flex items-center gap-2 px-2.5 py-1.5 rounded-xl bg-zinc-900 border border-zinc-800 text-xs">
             <img
@@ -329,6 +344,41 @@ export const SubscriptionModelPage: React.FC = () => {
             </button>
           </div>
         )}
+
+        {/* Global Multi-Currency Acceptance Notice */}
+        <div className="rounded-3xl p-5 sm:p-6 bg-gradient-to-r from-[#17120a] via-[#0d0d0d] to-[#0d0d0d] border border-[#c5a059]/40 shadow-[0_0_30px_rgba(197,160,89,0.15)] flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+          <div className="space-y-1.5">
+            <div className="flex items-center gap-2 flex-wrap">
+              <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-[#c5a059] text-black uppercase tracking-wider flex items-center gap-1">
+                <Globe className="w-3 h-3" />
+                Global Multi-Currency Active
+              </span>
+              <span className="text-[11px] text-zinc-400 font-mono">
+                {selectedCurrency === "INR" ? "Base Currency: Indian Rupee (₹)" : `1 ${selectedCurrency} ≈ ₹${currencyInfo.rateToINR} INR`}
+              </span>
+              <span className="px-2 py-0.2 rounded-full text-[10px] font-mono bg-blue-500/10 text-blue-400 border border-blue-500/20">
+                SWIFT: {OFFICIAL_BANK_DETAILS.swiftCode}
+              </span>
+            </div>
+            <h3 className="text-base sm:text-lg font-serif italic text-white">
+              Accepting All World Currencies for INR Subscription Retainer
+            </h3>
+            <p className="text-xs text-zinc-400 max-w-xl">
+              Pay the ₹5,000/mo retainer in your home currency (<strong className="text-zinc-200">USD, EUR, GBP, AED, SGD, CAD, AUD, SAR, QAR, JPY</strong> & all 35+ global currencies). Inward wire remittances settle directly into Karur Vysya Bank via SWIFT Code: <span className="font-mono text-[#c5a059] font-bold">{OFFICIAL_BANK_DETAILS.swiftCode}</span>.
+            </p>
+          </div>
+
+          <div className="flex items-center gap-3 w-full md:w-auto justify-between md:justify-end">
+            <button
+              type="button"
+              onClick={() => setIsPaymentModalOpen(true)}
+              className="px-5 py-3 rounded-2xl bg-gradient-to-r from-[#c5a059] to-[#dfc082] hover:from-[#d4b57a] hover:to-[#ebcf99] text-black font-bold text-xs shadow-[0_0_20px_rgba(197,160,89,0.3)] transition-all cursor-pointer whitespace-nowrap flex items-center gap-2"
+            >
+              <CreditCard className="w-4 h-4" />
+              <span>Open Payment Gateway (All Currencies) &rarr;</span>
+            </button>
+          </div>
+        </div>
 
         {/* Header Title */}
         <div className="text-center space-y-2 max-w-2xl mx-auto">
@@ -624,6 +674,30 @@ export const SubscriptionModelPage: React.FC = () => {
                   {copiedField === "purpose" ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
                 </button>
               </div>
+
+              {/* International SWIFT Code */}
+              <div className="flex items-center justify-between p-2 rounded-xl bg-blue-950/20 border border-blue-500/30">
+                <div>
+                  <span className="text-[10px] text-blue-400 uppercase font-bold block">SWIFT Code (All Currencies)</span>
+                  <strong className="text-blue-200 font-mono font-bold">{OFFICIAL_BANK_DETAILS.swiftCode}</strong>
+                </div>
+                <button
+                  onClick={() => handleCopy(OFFICIAL_BANK_DETAILS.swiftCode, "swift")}
+                  className="p-1.5 rounded text-blue-400 hover:text-white hover:bg-blue-900/40"
+                >
+                  {copiedField === "swift" ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
+                </button>
+              </div>
+
+              {/* Action Button to Open Payment Gateway Modal */}
+              <button
+                type="button"
+                onClick={() => setIsPaymentModalOpen(true)}
+                className="w-full mt-2 py-2.5 px-4 rounded-xl bg-gradient-to-r from-[#c5a059] to-[#dfc082] hover:from-[#d4b57a] hover:to-[#ebcf99] text-black font-bold text-xs shadow-md transition-all cursor-pointer flex items-center justify-center gap-2"
+              >
+                <CreditCard className="w-3.5 h-3.5" />
+                <span>Pay via GPay / SWIFT / Card &rarr;</span>
+              </button>
             </div>
 
             <div className="pt-2 flex items-center justify-between text-[10px] text-zinc-500">
@@ -639,8 +713,20 @@ export const SubscriptionModelPage: React.FC = () => {
 
       {/* Footer */}
       <footer className="w-full border-t border-zinc-800/80 bg-[#080808] py-3 px-6 z-10 text-[11px] text-zinc-500 text-center">
-        <span>Locate Pin &bull; Official Retainer: ₹5,000/month &bull; Beneficiary Moorthy S L (Karur Vysya Bank)</span>
+        <span>Locate Pin &bull; Official Retainer: ₹5,000/month &bull; Beneficiary Moorthy S L (Karur Vysya Bank) &bull; Accepting All Global Currencies</span>
       </footer>
+
+      {/* Multi-Currency Bank Payment Modal */}
+      <BankPaymentModal
+        isOpen={isPaymentModalOpen}
+        onClose={() => setIsPaymentModalOpen(false)}
+        selectedPlanId="plan-seo-monthly-standard"
+        defaultBusinessName={businessName}
+        onPaymentSubmitted={(record) => {
+          setUtrNumber(record.utrNumber);
+          handleActivatePaid();
+        }}
+      />
 
       {/* Welcome Email Modal */}
       <WelcomeEmailModal

@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { AuthProvider, useAuth } from "./context/AuthContext";
 import { AnalyticsProvider } from "./context/AnalyticsContext";
 import { AccessLocationProvider } from "./context/AccessLocationContext";
+import { CurrencyProvider } from "./context/CurrencyContext";
 import { LoginPage } from "./components/LoginPage";
 import { SubscriptionModelPage } from "./components/SubscriptionModelPage";
 import { Header } from "./components/Header";
@@ -131,7 +132,9 @@ export default function App() {
     <AuthProvider>
       <AnalyticsProvider>
         <AccessLocationProvider>
-          <AppContent />
+          <CurrencyProvider>
+            <AppContent />
+          </CurrencyProvider>
         </AccessLocationProvider>
       </AnalyticsProvider>
     </AuthProvider>

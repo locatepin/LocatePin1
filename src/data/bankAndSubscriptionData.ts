@@ -14,11 +14,17 @@ export const OFFICIAL_BANK_DETAILS = {
   supportEmail: "moorthy.seo@kvb.in",
   currency: "INR (₹)",
   swiftCode: "KVBLINBB",
+  acceptsAllCurrencies: true,
+  inwardRemittanceInfo: "All global currencies (USD, EUR, GBP, AED, SGD, CAD, AUD, SAR, QAR, JPY, CHF, and all world currencies) accepted for the value of the INR subscription amount at daily forex rates. Direct inward settlement to Karur Vysya Bank via SWIFT Code KVBLINBB.",
+  supportedGlobalCurrencies: ["USD", "EUR", "GBP", "AED", "SGD", "CAD", "AUD", "SAR", "QAR", "JPY", "CHF", "MYR", "All Currencies"],
   paymentModesSupported: [
     "Google Pay (GPay)",
     "Paytm UPI & Wallet",
     "PhonePe / BHIM UPI",
     "KVB Direct Bank Transfer (NEFT / IMPS)",
+    "International SWIFT Wire (All Currencies)",
+    "International Credit / Debit Card",
+    "PayPal / Wise / Remittance",
   ],
 };
 

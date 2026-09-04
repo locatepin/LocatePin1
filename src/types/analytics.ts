@@ -187,9 +187,12 @@ export interface BankPaymentRecord {
   businessName: string;
   planName: string;
   amountINR: number;
+  amountForeign?: number;
+  currencyPaid?: string;
+  exchangeRateUsed?: number;
   utrNumber: string;
   transactionPurpose: string;
-  paymentMethod: 'UPI' | 'NEFT / RTGS / IMPS' | 'NetBanking' | 'Google Pay (GPay)' | 'Paytm' | 'PhonePe' | 'KVB NetBanking / NEFT' | 'Admin VIP Grant (Super Admin Moorthy S L)';
+  paymentMethod: 'UPI' | 'NEFT / RTGS / IMPS' | 'NetBanking' | 'Google Pay (GPay)' | 'Paytm' | 'PhonePe' | 'KVB NetBanking / NEFT' | 'International SWIFT Wire' | 'Credit / Debit Card (Global)' | 'PayPal / International Remittance' | 'Admin VIP Grant (Super Admin Moorthy S L)' | string;
   status: 'Approved' | 'Pending Review' | 'Rejected';
   timestamp: string;
   accountCredited: string;
