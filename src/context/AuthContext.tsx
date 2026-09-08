@@ -41,11 +41,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       if (stored) {
         const parsed: UserAccount = JSON.parse(stored);
         
-        // Special VIP Grant Override: digi.hjb@gmail.com & digitalhkravibatterypoint@gmail.com are 100% Free for 1 Year
+        // Special VIP Grant Override: digi.hjb@gmail.com, digitalhkravibatterypoint@gmail.com & dbsc203@gmail.com are 100% Free for 1 Year
         const isHjbVip = parsed.email?.toLowerCase() === "digi.hjb@gmail.com";
         const isRaviVip = parsed.email?.toLowerCase() === "digitalhkravibatterypoint@gmail.com";
+        const isDbscVip = parsed.email?.toLowerCase() === "dbsc203@gmail.com";
 
-        if (isHjbVip || isRaviVip) {
+        if (isHjbVip || isRaviVip || isDbscVip) {
           parsed.hasActiveSubscription = true;
           parsed.subscriptionStatus = "active";
           parsed.activePlan = "Enterprise Multi-Location (1-Year Free VIP Pass)";
@@ -53,10 +54,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             parsed.businessName = parsed.businessName || "HJB Digital Enterprise Hub";
             parsed.website = parsed.website || "https://hjbdigital.com";
             parsed.city = parsed.city || "Chennai (Multi-Location Hub / OMR & Anna Nagar)";
-          } else {
+          } else if (isRaviVip) {
             parsed.businessName = parsed.businessName || "HK Ravi Battery Point";
             parsed.website = parsed.website || "https://hkravibatterypoint.com";
             parsed.city = parsed.city || "Chennai (Tambaram / GST Road)";
+          } else if (isDbscVip) {
+            parsed.businessName = parsed.businessName || "DBSC Enterprise Hub";
+            parsed.website = parsed.website || "https://dbsc203.com";
+            parsed.city = parsed.city || "Chennai (Central Hub & Multi-Location)";
           }
           localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(parsed));
         } else if (parsed.subscriptionStatus === "trial" && parsed.trialExpiresAt) {
@@ -186,7 +191,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     let loggedInUser: UserAccount;
     const isHjbVip = cleanEmail === "digi.hjb@gmail.com";
     const isRaviVip = cleanEmail === "digitalhkravibatterypoint@gmail.com";
-    const isVip = isHjbVip || isRaviVip;
+    const isDbscVip = cleanEmail === "dbsc203@gmail.com";
+    const isVip = isHjbVip || isRaviVip || isDbscVip;
 
     if (existing) {
       loggedInUser = {
@@ -206,7 +212,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       // Clean readable name derivation from email e.g. "alex.smith" -> "Alex Smith"
       const rawUserPart = cleanEmail.split("@")[0].replace(/[0-9]/g, "").replace(/[._-]/g, " ").trim();
       const fallbackName = rawUserPart ? rawUserPart.replace(/\b\w/g, (l) => l.toUpperCase()) : "Valued Member";
-      const derivedName = name?.trim() || (isHjbVip ? "HJB Digital (Enterprise VIP)" : isRaviVip ? "Ravi (HK Ravi Battery Point)" : fallbackName);
+      const derivedName = name?.trim() || (isHjbVip ? "HJB Digital (Enterprise VIP)" : isRaviVip ? "Ravi (HK Ravi Battery Point)" : isDbscVip ? "DBSC Enterprise (1-Year VIP)" : fallbackName);
       
       loggedInUser = {
         id: `user-g-${Date.now()}`,
@@ -220,14 +226,18 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           ? "HJB Digital Enterprise Hub"
           : isRaviVip
           ? "HK Ravi Battery Point"
+          : isDbscVip
+          ? "DBSC Enterprise Hub"
           : isAdmin
           ? "Locate Pin AI Network"
           : `${derivedName}'s Business Hub`,
-        website: isHjbVip ? "https://hjbdigital.com" : isRaviVip ? "https://hkravibatterypoint.com" : undefined,
+        website: isHjbVip ? "https://hjbdigital.com" : isRaviVip ? "https://hkravibatterypoint.com" : isDbscVip ? "https://dbsc203.com" : undefined,
         city: isHjbVip
           ? "Chennai (Multi-Location Hub / OMR & Anna Nagar)"
           : isRaviVip
           ? "Chennai (Tambaram / GST Road)"
+          : isDbscVip
+          ? "Chennai (Central Hub & Multi-Location)"
           : "Chennai (Anna Nagar)",
         joinedAt: new Date().toISOString().split("T")[0],
         activePlan: isVip
@@ -261,7 +271,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     let newUser: UserAccount;
     const isHjbVip = cleanEmail === "digi.hjb@gmail.com";
     const isRaviVip = cleanEmail === "digitalhkravibatterypoint@gmail.com";
-    const isVip = isHjbVip || isRaviVip;
+    const isDbscVip = cleanEmail === "dbsc203@gmail.com";
+    const isVip = isHjbVip || isRaviVip || isDbscVip;
 
     if (existing) {
       newUser = {
@@ -279,7 +290,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       const isAdmin = cleanEmail.includes("moorthy") || cleanEmail.includes("admin");
       const rawUserPart = cleanEmail.split("@")[0].replace(/[0-9]/g, "").replace(/[._-]/g, " ").trim();
       const fallbackName = rawUserPart ? rawUserPart.replace(/\b\w/g, (l) => l.toUpperCase()) : "Valued Member";
-      const derivedName = isHjbVip ? "HJB Digital (Enterprise VIP)" : isRaviVip ? "Ravi (HK Ravi Battery Point)" : fallbackName;
+      const derivedName = isHjbVip ? "HJB Digital (Enterprise VIP)" : isRaviVip ? "Ravi (HK Ravi Battery Point)" : isDbscVip ? "DBSC Enterprise (1-Year VIP)" : fallbackName;
       
       newUser = {
         id: `user-cred-${Date.now()}`,
@@ -292,14 +303,18 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           ? "HJB Digital Enterprise Hub"
           : isRaviVip
           ? "HK Ravi Battery Point"
+          : isDbscVip
+          ? "DBSC Enterprise Hub"
           : isAdmin
           ? "SEO Admin Operations"
           : `${derivedName}'s Business Hub`,
-        website: isHjbVip ? "https://hjbdigital.com" : isRaviVip ? "https://hkravibatterypoint.com" : undefined,
+        website: isHjbVip ? "https://hjbdigital.com" : isRaviVip ? "https://hkravibatterypoint.com" : isDbscVip ? "https://dbsc203.com" : undefined,
         city: isHjbVip
           ? "Chennai (Multi-Location Hub / OMR & Anna Nagar)"
           : isRaviVip
           ? "Chennai (Tambaram / GST Road)"
+          : isDbscVip
+          ? "Chennai (Central Hub & Multi-Location)"
           : "Chennai (Anna Nagar)",
         joinedAt: new Date().toISOString().split("T")[0],
         isVerified: true,

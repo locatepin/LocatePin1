@@ -35,30 +35,39 @@ export const SubscriptionModelPage: React.FC = () => {
   const userEmail = user?.email?.toLowerCase() || "";
   const isHjbVipUser = userEmail === "digi.hjb@gmail.com";
   const isRaviVipUser = userEmail === "digitalhkravibatterypoint@gmail.com";
-  const isVipUser = isHjbVipUser || isRaviVipUser;
+  const isDbscVipUser = userEmail === "dbsc203@gmail.com";
+  const isVipUser = isHjbVipUser || isRaviVipUser || isDbscVipUser;
 
   const defaultBizName = isHjbVipUser
     ? "HJB Digital Enterprise Hub"
     : isRaviVipUser
     ? "HK Ravi Battery Point"
+    : isDbscVipUser
+    ? "DBSC Enterprise Hub"
     : "THEME AQUARIUM";
 
   const defaultWebsite = isHjbVipUser
     ? "https://hjbdigital.com"
     : isRaviVipUser
     ? "https://hkravibatterypoint.com"
+    : isDbscVipUser
+    ? "https://dbsc203.com"
     : "https://themeaquarium.com";
 
   const defaultCity = isHjbVipUser
     ? "Chennai (Multi-Location Hub / OMR & Anna Nagar)"
     : isRaviVipUser
     ? "Chennai (Tambaram / GST Road & Multi-Location)"
+    : isDbscVipUser
+    ? "Chennai (Central Hub & Multi-Location)"
     : "Chennai (Anna Nagar)";
 
   const defaultUtr = isHjbVipUser
     ? "VIP-1YR-ENTERPRISE-HJB-DIGI"
     : isRaviVipUser
     ? "VIP-1YR-ENTERPRISE-GRANT-2026"
+    : isDbscVipUser
+    ? "VIP-1YR-ENTERPRISE-DBSC-203"
     : "";
 
   const [selectedPlan, setSelectedPlan] = useState<string>(
@@ -298,7 +307,7 @@ export const SubscriptionModelPage: React.FC = () => {
                 <span>1-Year Free VIP Enterprise Grant Active</span>
               </div>
               <h2 className="text-xl sm:text-2xl font-serif italic text-white">
-                Welcome {isHjbVipUser ? "HJB Digital (Enterprise VIP)" : isRaviVipUser ? "Ravi (HK Ravi Battery Point)" : user?.name || "VIP Member"}!
+                Welcome {isHjbVipUser ? "HJB Digital (Enterprise VIP)" : isRaviVipUser ? "Ravi (HK Ravi Battery Point)" : isDbscVipUser ? "DBSC Enterprise (1-Year VIP)" : user?.name || "VIP Member"}!
               </h2>
               <p className="text-xs sm:text-sm text-zinc-300 max-w-xl">
                 Super Admin <strong className="text-white">Moorthy S L</strong> has approved a <strong className="text-[#c5a059]">100% Free 1-Year Enterprise Multi-Location Subscription</strong> (₹1,80,000 Annual Value Waived). Unlimited keywords and 150,000 visits/mo quota are unlocked.

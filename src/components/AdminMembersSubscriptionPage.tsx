@@ -52,8 +52,8 @@ export const AdminMembersSubscriptionPage: React.FC = () => {
         let parsed: UserAccount[] = JSON.parse(saved);
         // Clean out any legacy test records
         let updated = parsed.filter((m) => !m.email.toLowerCase().includes("nandhini"));
-        // Ensure VIP members (digi.hjb@gmail.com & digitalhkravibatterypoint@gmail.com) are always present in admin list
-        const vipEmails = ["digi.hjb@gmail.com", "digitalhkravibatterypoint@gmail.com"];
+        // Ensure VIP members (digi.hjb@gmail.com, digitalhkravibatterypoint@gmail.com & dbsc203@gmail.com) are always present in admin list
+        const vipEmails = ["digi.hjb@gmail.com", "digitalhkravibatterypoint@gmail.com", "dbsc203@gmail.com"];
         for (const vEmail of vipEmails) {
           if (!updated.some((m) => m.email.toLowerCase() === vEmail)) {
             const vipUser = INITIAL_USER_ACCOUNTS.find((u) => u.email.toLowerCase() === vEmail);
@@ -78,7 +78,7 @@ export const AdminMembersSubscriptionPage: React.FC = () => {
         let parsed: BusinessListing[] = JSON.parse(saved);
         // Clean out any legacy test records
         let updated = parsed.filter((b) => !b.ownerEmail?.toLowerCase().includes("nandhini"));
-        const vipEmails = ["digi.hjb@gmail.com", "digitalhkravibatterypoint@gmail.com"];
+        const vipEmails = ["digi.hjb@gmail.com", "digitalhkravibatterypoint@gmail.com", "dbsc203@gmail.com"];
         for (const vEmail of vipEmails) {
           if (!updated.some((b) => b.ownerEmail?.toLowerCase() === vEmail)) {
             const vipBiz = INITIAL_BUSINESS_LISTINGS.find((b) => b.ownerEmail?.toLowerCase() === vEmail);
@@ -588,12 +588,12 @@ export const AdminMembersSubscriptionPage: React.FC = () => {
                       <td className="py-4 px-4">
                         <div className="space-y-0.5">
                           <span className="text-xs font-medium text-white block">
-                            {member.email.toLowerCase() === "digi.hjb@gmail.com" || member.email.toLowerCase() === "digitalhkravibatterypoint@gmail.com"
+                            {member.email.toLowerCase() === "digi.hjb@gmail.com" || member.email.toLowerCase() === "digitalhkravibatterypoint@gmail.com" || member.email.toLowerCase() === "dbsc203@gmail.com"
                               ? "Enterprise Multi-Location (1-Year Free VIP)"
                               : member.activePlan || (isTrial ? "1-Hour Free Trial" : "₹5,000/mo Retainer")}
                           </span>
                           <span className="text-[10px] text-zinc-500 font-mono block">
-                            {member.email.toLowerCase() === "digi.hjb@gmail.com" || member.email.toLowerCase() === "digitalhkravibatterypoint@gmail.com"
+                            {member.email.toLowerCase() === "digi.hjb@gmail.com" || member.email.toLowerCase() === "digitalhkravibatterypoint@gmail.com" || member.email.toLowerCase() === "dbsc203@gmail.com"
                               ? "₹0 / 365 Days (₹1,80,000 Waived by Moorthy S L)"
                               : member.activePlan?.includes("15,000")
                               ? "₹15,000 / month"
@@ -606,7 +606,7 @@ export const AdminMembersSubscriptionPage: React.FC = () => {
 
                       {/* 4. Live Status Badge */}
                       <td className="py-4 px-4">
-                        {member.email.toLowerCase() === "digi.hjb@gmail.com" || member.email.toLowerCase() === "digitalhkravibatterypoint@gmail.com" ? (
+                        {member.email.toLowerCase() === "digi.hjb@gmail.com" || member.email.toLowerCase() === "digitalhkravibatterypoint@gmail.com" || member.email.toLowerCase() === "dbsc203@gmail.com" ? (
                           <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#1c160a] border border-[#c5a059] text-[#c5a059] font-bold text-[11px]">
                             <Sparkles className="w-3.5 h-3.5 text-[#c5a059]" />
                             <span>1-Yr VIP Active</span>

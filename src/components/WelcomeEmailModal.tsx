@@ -75,7 +75,8 @@ Official Beneficiary Settlement:
 
   const isHjbVip = user.email?.toLowerCase() === "digi.hjb@gmail.com";
   const isRaviVip = user.email?.toLowerCase() === "digitalhkravibatterypoint@gmail.com";
-  const isVip = isHjbVip || isRaviVip;
+  const isDbscVip = user.email?.toLowerCase() === "dbsc203@gmail.com";
+  const isVip = isHjbVip || isRaviVip || isDbscVip;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/80 backdrop-blur-md animate-in fade-in">
@@ -142,7 +143,7 @@ Official Beneficiary Settlement:
           <div className="pt-1 text-sm font-semibold text-white font-serif italic flex items-center gap-1.5">
             <span>
               {isVip
-                ? `Subject: 🎉 1-Year Free VIP Enterprise Subscription Activated for ${isHjbVip ? "HJB Digital" : "HK Ravi Battery Point"}!`
+                ? `Subject: 🎉 1-Year Free VIP Enterprise Subscription Activated for ${isHjbVip ? "HJB Digital" : isRaviVip ? "HK Ravi Battery Point" : "DBSC Enterprise"}!`
                 : "Subject: Welcome to Locate Pin! Select Your Google Maps & SEO Subscription"}
             </span>
           </div>
@@ -163,7 +164,7 @@ Official Beneficiary Settlement:
                   <span>VIP Authorization by Super Admin Moorthy S L</span>
                 </div>
                 <p className="text-zinc-200">
-                  Congratulations! Super Admin <strong className="text-white">Moorthy S L</strong> has approved a <strong className="text-[#c5a059]">100% Free 1-Year Enterprise Multi-Location Plan</strong> for {isHjbVip ? "HJB Digital Enterprise Hub (digi.hjb@gmail.com)" : "HK Ravi Battery Point (digitalhkravibatterypoint@gmail.com)"}.
+                  Congratulations! Super Admin <strong className="text-white">Moorthy S L</strong> has approved a <strong className="text-[#c5a059]">100% Free 1-Year Enterprise Multi-Location Plan</strong> for {isHjbVip ? "HJB Digital Enterprise Hub (digi.hjb@gmail.com)" : isRaviVip ? "HK Ravi Battery Point (digitalhkravibatterypoint@gmail.com)" : "DBSC Enterprise Hub (dbsc203@gmail.com)"}.
                 </p>
                 <p className="text-[11px] text-zinc-400">
                   • 365 Days Active Enterprise License (₹1,80,000 Annual Value Waived)<br />
